@@ -1,0 +1,50 @@
+---
+title: "complaints"
+author: "Ethan Cohen"
+date: "5/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(lubridate)
+library(janitor)
+library(readxl)
+library(writexl)
+
+
+```
+
+
+```{r}
+mostcommonproblems <- complaints %>% 
+  group_by(product) %>% 
+  summarise(numcomplaints = n()) %>% 
+  arrange(desc(numcomplaints))
+
+```
+
+
+```{r}
+complaintsbycompanytop10 <- complaints %>% 
+  group_by(company) %>% 
+  summarise(numcomplaints = n()) %>% 
+  arrange(desc(numcomplaints)) %>% 
+  filter(numcomplaints > 3800)
+
+
+```
+
+```{r}
+
+worstmonths <- complaints %>% 
+  group_by(mm_yy_sent_to_company) %>% 
+  summarise(numcomplaints = n()) 
+
+ggplot(worstmonths, aes(x = mm_yy_sent_to_company, y = numcomplaints, group = 1)) +
+  geom_line()
+
+```
+

@@ -1,0 +1,63 @@
+---
+title: "Complaints"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(lubridate)
+library(janitor)
+library(readxl)
+library(writexl)
+
+
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+mostcommonproblems <- complaints %>% 
+  group_by(product) %>% 
+  summarise(numcomplaints = n()) %>% 
+  arrange(desc(numcomplaints))
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+complaintsbycompanytop10 <- complaints %>% 
+  group_by(company) %>% 
+  summarise(numcomplaints = n()) %>% 
+  arrange(desc(numcomplaints)) %>% 
+  filter(numcomplaints > 3800)
+
+```
+
+### Chart C
+
+```{r}
+
+worstmonths <- complaints %>% 
+  group_by(mm_yy_sent_to_company) %>% 
+  summarise(numcomplaints = n()) 
+
+ggplot(worstmonths, aes(x = mm_yy_sent_to_company, y = numcomplaints, group = 1)) +
+  geom_line()
+
+
+```
+
